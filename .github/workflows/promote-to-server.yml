@@ -1,0 +1,30 @@
+name: Promote to server
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: appleboy/ssh-action@master
+        timeout-minutes: 60
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            . ~/.nvm/nvm.sh
+            source ~/.bashrc
+            cd ${{ secrets.CWD }}
+            git fetch --all
+            git reset --hard origin/main
+            nvm install v16.0.0
+            nvm use
+            npm i --silent
+            npm run build
