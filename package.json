@@ -1,0 +1,94 @@
+{
+  "name": "whodini",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 14.15.1"
+  },
+  "scripts": {
+    "dev": "nodemon --config nodemon.json src/index.ts",
+    "dev:debug": "nodemon --config nodemon.json --inspect-brk src/index.ts",
+    "lint:all": "npm run lint:xo && npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit",
+    "lint:xo": "xo --fix",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "postinstall": "npm run build",
+    "kill:debugger": "kill -9 $(lsof -t -i tcp:9229)",
+    "test:startup": "npm run build && PREPUSH_CHECK=1 npm start",
+    "logs": "ssh mn 'tail -f ~/.pm2/logs/whodini-*.log'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/lodash": "^4.14.171",
+    "@types/natural": "^2.1.2",
+    "@types/sequelize": "^4.28.10",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-xo": "^0.37.0",
+    "eslint-config-xo-typescript": "^0.43.0",
+    "lint-staged": "^11.0.0",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5",
+    "xo": "^0.41.0"
+  },
+  "dependencies": {
+    "@slack/bolt": "^3.5.0",
+    "@slack/web-api": "^6.3.0",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "natural": "^5.0.3",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.4",
+    "reflect-metadata": "^0.1.13",
+    "regex-matches": "^1.0.1",
+    "sequelize": "6.6.2",
+    "sequelize-typescript": "^2.1.0",
+    "slugify": "^1.6.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:startup"
+    }
+  },
+  "xo": {
+    "ignores": [
+      "src/public/static/**/*"
+    ],
+    "rules": {
+      "@typescript-eslint/dot-notation": 0,
+      "@typescript-eslint/no-floating-promises": 0,
+      "@typescript-eslint/no-var-requires": 0,
+      "@typescript-eslint/no-unsafe-assignment": 0,
+      "@typescript-eslint/no-explicit-any": 0,
+      "default-case": 0,
+      "max-depth": 0,
+      "new-cap": 0,
+      "no-case-declarations": 0,
+      "no-new": 0,
+      "promise/prefer-await-to-then": 0,
+      "unicorn/no-array-for-each": 0
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "xo",
+      "xo-typescript"
+    ]
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix",
+    "*.{ts,md}": "prettier --write"
+  }
+}
